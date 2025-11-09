@@ -1,0 +1,138 @@
+Software Requirements Specification (SRS)
+
+Project: Local Password Manager
+
+Author: Ahmed
+Date: November 2025
+Version: 1.0 (Initial Draft)
+
+
+---
+
+1. Introduction
+
+1.1 Purpose
+
+The purpose of this project is to design and implement a local command-line password manager written in modern C++.
+The system allows users to securely store, retrieve, and manage their passwords in an encrypted vault file protected by a master password.
+
+1.2 Scope
+
+The Password Manager will:
+
+Run locally on a user’s computer (no network features in the initial version).
+Provide a simple CLI interface for basic password operations.
+Encrypt all stored data using strong cryptographic algorithms.
+
+
+1.3 Intended Users
+
+Individuals who want to securely manage passwords locally.
+Developers of modern C++ and cryptographic programming concepts.
+
+---
+
+2. System Overview
+
+The application is a command-line tool with three main components:
+
+1. Vault Manager – handles loading, saving, and encrypting/decrypting the vault file.
+2. Credential Manager – manages credential operations (add, list, get, delete).
+3. CLI Interface – provides command-line interaction with the user.
+
+Data is stored in a single encrypted file on disk, accessible only with the correct master password.
+
+---
+
+3. Functional Requirements
+
+ID Requirement Description
+
+FR-1 Create Vault The system shall allow the user to create a new vault protected by a master password.
+FR-2 Open Vault The system shall prompt the user for the master password to unlock an existing vault.
+FR-3 Add Credential The system shall allow the user to add a credential (service, username, password).
+FR-4 List Credentials The system shall list all stored credentials (without showing passwords by default).
+FR-5 Get Credential The system shall display the decrypted password for a selected service.
+FR-6 Delete Credential The system shall remove a credential entry by service name.
+FR-7 Save & Exit The system shall encrypt and save all data securely upon exit.
+
+---
+
+4. Non-Functional Requirements
+
+ID Requirement Description
+
+NFR-1 Usability The CLI shall provide clear commands and readable output.
+NFR-2 Performance Loading or saving the vault shall take less than 2 seconds for up to 1000 credentials.
+NFR-3 Portability The software shall compile and run on Linux and Windows.
+NFR-4 Maintainability Code shall be modular, documented, and follow modern C++17+ best practices.
+NFR-5 Reliability The vault file shall not be corrupted by abnormal termination or I/O errors.
+
+---
+
+5. Security Requirements
+
+ID Requirement Description
+
+SR-1 Basic Encryption All stored credentials must be encrypted before saving to disk. 
+SR-2 Master Password The vault must be protected by a master password that is required to open it.
+SR-3 Key Derivation (Simple) Derive an encryption key from the master password using a basic function.
+SR-4 No Plaintext on Disk The vault file must never contain passwords or credentials in plain text.
+
+---
+
+6. Data Requirements
+
+Vault File Format:
+
+Header: metadata (version, salt, nonce, MAC).
+Payload: encrypted JSON or binary data with credentials.
+
+
+Credential Fields:
+
+Service Name (string)
+Username (string)
+Password (encrypted string)
+
+
+---
+
+7. Command-Line Interface Requirements
+
+Command Description Example
+
+create Create a new vault pm create vault.dat
+open Open existing vault pm open vault.dat
+add Add a new credential pm add gmail user@gmail.com
+list List all stored credentials pm list
+get Retrieve credential password pm get gmail
+delete Delete credential pm delete gmail
+exit Save and exit vault pm exit
+
+---
+
+8. Future Enhancements (Optional)
+
+Password generator (configurable strength and length).
+Password strength validation.
+Encrypted vault backup.
+GUI interface (Qt).
+Sync feature with remote server (future research).
+
+---
+
+9. Constraints
+
+Must be developed in modern C++17 or later.
+Must use CMake as the build system.
+Must rely on libsodium or OpenSSL for encryption.
+
+---
+
+10. Acceptance Criteria
+
+The program compiles and runs correctly.
+A user can securely create, open, and manage credentials via CLI.
+Vault file content remains unreadable without the correct master password.
+All tests for encryption, saving, and loading pass successfully.
