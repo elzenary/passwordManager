@@ -31,6 +31,7 @@ Execute these commands from the repository root:
 2. Build: cmake --build build
 
 The executable is in the ./build/ directory.
+
 ---
 
 ## Contributing
