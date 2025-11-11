@@ -1,18 +1,33 @@
 #include "CredentialManager.h"
-#include <iostream>
 
-bool CredentialManager::addCredential(const Credential& cred) {
-std::cout << "[Dummy] Added credential for service: " << cred.service << std::endl;
-credentials_.push_back(cred);
-return true;
+CredentialManager::CredentialManager(std::shared_ptr<VaultManager> vault)
+    : vault_(std::move(vault)) {
+    storage_ = vault_->load();
 }
 
-bool CredentialManager::deleteCredential(const Credential& cred){
-std::cout << "[Dummy] Deleting credential for service: " << cred.service << std::endl;
-return true;
+bool CredentialManager::addCredential(const std::string& service, const CredentialData& data) {
+    storage_[service] = data;
+    return vault_->save(storage_);
 }
 
+std::optional<CredentialData> CredentialManager::getCredential(const std::string& service) const {
+    auto it = storage_.find(service);
+    if (it != storage_.end())
+        return it->second;
+    return std::nullopt;
+}
 
-void CredentialManager::listCredentials() const {
-std::cout << "[Dummy] Listing credentials (" << credentials_.size() << ")\n";
+bool CredentialManager::deleteCredential(const std::string& service) {
+    if (storage_.erase(service)) {
+        return vault_->save(storage_);
+    }
+    return false;
+}
+
+std::vector<ServiceCredential> CredentialManager::listCredentials() const {
+    std::vector<ServiceCredential> list;
+    for (const auto& [service, data] : storage_) {
+        list.push_back({service, data});
+    }
+    return list;
 }

@@ -18,6 +18,8 @@ src/CLI.cpp
 
 
 set(HEADERS
+include/CredentialData.h
+include/ICredentialService.h
 include/VaultManager.h
 include/CredentialManager.h
 include/CLI.h

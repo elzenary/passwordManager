@@ -1,23 +1,23 @@
-#pragma once
-#include <string>
-#include <vector>
+#ifndef CREDENTIAL_MANAGER_H
+#define CREDENTIAL_MANAGER_H
 
+#include "ICredentialService.h"
+#include "VaultManager.h"
+#include <unordered_map>
+#include <memory>
 
-struct Credential {
-std::string service;
-std::string username;
-std::string password;
-};
-
-
-class CredentialManager {
-public:
-CredentialManager():credentials_{}{};
-bool addCredential(const Credential& cred);
-bool deleteCredential(const Credential& cred);
-void listCredentials() const;
-
-
+class CredentialManager : public ICredentialService {
 private:
-std::vector<Credential> credentials_;
+    std::unordered_map<std::string, CredentialData> storage_;
+    std::shared_ptr<VaultManager> vault_;
+
+public:
+    explicit CredentialManager(std::shared_ptr<VaultManager> vault);
+
+    bool addCredential(const std::string& service, const CredentialData& data) override;
+    std::optional<CredentialData> getCredential(const std::string& service) const override;
+    bool deleteCredential(const std::string& service) override;
+    std::vector<ServiceCredential> listCredentials() const override;
 };
+
+#endif // CREDENTIAL_MANAGER_H

@@ -1,22 +1,22 @@
-#pragma once
-#include <optional>
-#include<vector>
-#include<string>
-#include<optional>
+#ifndef VAULT_MANAGER_H
+#define VAULT_MANAGER_H
 
+#include <string>
+#include <unordered_map>
+#include "CredentialData.h"
 
 class VaultManager {
-public:
-VaultManager();
-bool createVault(const std::string& filePath, const std::string& masterPassword);
-bool openVault(const std::string& filePath, const std::string& masterPassword);
-bool saveVault(const std::string& filePath);
-
-
-std::optional<std::string> getDecryptedData();
-
-
 private:
-std::string masterKey_;
-std::vector<unsigned char> encryptedData_;
+    std::string filePath_;
+
+    std::string encrypt(const std::string& input) const;
+    std::string decrypt(const std::string& input) const;
+
+public:
+    explicit VaultManager(const std::string& filePath);
+
+    bool save(const std::unordered_map<std::string, CredentialData>& storage);
+    std::unordered_map<std::string, CredentialData> load();
 };
+
+#endif // VAULT_MANAGER_H

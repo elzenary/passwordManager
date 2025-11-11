@@ -1,17 +1,16 @@
-#pragma once
-#include <string>
-#include "VaultManager.h"
-#include "CredentialManager.h"
+#ifndef CLI_H
+#define CLI_H
 
+#include <memory>
+#include "ICredentialService.h"
 
-class CLIInterface {
-public:
-CLIInterface();
-void run();
-
-
+class CLI {
 private:
-CredentialManager creds_;
-void showMenu();
-void handleCommand(const std::string& cmd);
+    std::shared_ptr<ICredentialService> credentialService_;
+
+public:
+    explicit CLI(std::shared_ptr<ICredentialService> service);
+    void run();
 };
+
+#endif // CLI_H

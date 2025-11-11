@@ -1,30 +1,49 @@
 #include "VaultManager.h"
+#include <fstream>
+#include <sstream>
 #include <iostream>
 
+VaultManager::VaultManager(const std::string& filePath)
+    : filePath_(filePath) {}
 
-VaultManager::VaultManager() {
-std::cout << "VaultManager initialized." << std::endl;
+bool VaultManager::save(const std::unordered_map<std::string, CredentialData>& storage) {
+    std::ofstream file(filePath_);
+    if (!file.is_open()) return false;
+
+    for (const auto& [service, data] : storage) {
+        file << encrypt(service) << "," 
+             << encrypt(data.username) << "," 
+             << encrypt(data.password) << "\n";
+    }
+    return true;
 }
 
+std::unordered_map<std::string, CredentialData> VaultManager::load() {
+    std::unordered_map<std::string, CredentialData> storage;
+    std::ifstream file(filePath_);
+    if (!file.is_open()) return storage;
 
-bool VaultManager::createVault(const std::string& filePath, const std::string& masterPassword) {
-std::cout << "[Dummy] Creating vault at: " << filePath << std::endl;
-return true;
+    std::string line;
+    while (std::getline(file, line)) {
+        std::istringstream ss(line);
+        std::string service, user, pass;
+        if (std::getline(ss, service, ',') &&
+            std::getline(ss, user, ',') &&
+            std::getline(ss, pass)) {
+            storage[decrypt(service)] = {decrypt(user), decrypt(pass)};
+        }
+    }
+    return storage;
 }
 
-
-bool VaultManager::openVault(const std::string& filePath, const std::string& masterPassword) {
-std::cout << "[Dummy] Opening vault: " << filePath << std::endl;
-return true;
+std::string VaultManager::encrypt(const std::string& input) const {
+    std::string output = input;
+    for (char& c : output) c += 1; // simple shift encryption
+    return output;
 }
 
-
-bool VaultManager::saveVault(const std::string& filePath) {
-std::cout << "[Dummy] Saving vault to: " << filePath << std::endl;
-return true;
-}
-
-
-std::optional<std::string> VaultManager::getDecryptedData() {
-return "[Dummy decrypted data]";
+std::string VaultManager::decrypt(const std::string& input) const {
+    std::string output = input;
+    for (char& c : output) c -= 1;
+    return output;
 }

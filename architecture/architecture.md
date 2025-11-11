@@ -20,7 +20,7 @@ It follows a **Layered Modular Service Architecture**, emphasizing separation of
 
 ## UML Diagram
 
-The full text-based UML diagram with classes, members, methods, and relationships is available in [`uml.md`](./uml.md)
+The full text-based UML diagram with classes, members, methods, and relationships is available in [`uml.txt`](./uml.txt)
 
 ---
 

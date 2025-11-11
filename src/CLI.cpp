@@ -1,37 +1,50 @@
 #include "CLI.h"
 #include <iostream>
 
+CLI::CLI(std::shared_ptr<ICredentialService> service)
+    : credentialService_(std::move(service)) {}
 
-CLIInterface::CLIInterface() {
-std::cout << "CLI Interface initialized." << std::endl;
-}
+void CLI::run() {
+    int choice;
+    std::string service, username, password;
 
-void CLIInterface::run() {
-std::cout << "Welcome to Dummy Password Manager!\n";
-std::string cmd;
-while (true) {
-showMenu();
-std::getline(std::cin, cmd);
-if (cmd == "exit") break;
-handleCommand(cmd);
-}
-}
+    do {
+        std::cout << "\n--- Password Manager CLI ---\n";
+        std::cout << "1. Add Credential\n2. Get Credential\n3. Delete Credential\n4. List Credentials\n0. Exit\n> ";
+        std::cin >> choice;
 
-void CLIInterface::showMenu() {
-std::cout << "\nCommands: add | list | get | delete | exit\n> ";
-}
+        switch (choice) {
+            case 1:
+                std::cout << "Service: ";
+                std::cin >> service;
+                std::cout << "Username: ";
+                std::cin >> username;
+                std::cout << "Password: ";
+                std::cin >> password;
+                credentialService_->addCredential(service, {username, password});
+                break;
 
-void CLIInterface::handleCommand(const std::string& cmd) {
-if (cmd == "add") {
-creds_.addCredential({"example.com", "user", "pass"});
-} else if (cmd == "list") {
-creds_.listCredentials();
-} else if (cmd == "get") {
-//auto c = creds_.getCredential("example.com");
-//if (c) std::cout << "Username: " << c->username << ", Password: " << c->password << std::endl;
-} else if (cmd == "delete") {
-//creds_.deleteCredential("example.com");
-} else {
-std::cout << "Unknown command." << std::endl;
-}
+            case 2:
+                std::cout << "Service: ";
+                std::cin >> service;
+                if (auto cred = credentialService_->getCredential(service)) {
+                    std::cout << "User: " << cred->username << ", Pass: " << cred->password << "\n";
+                } else {
+                    std::cout << "Not found.\n";
+                }
+                break;
+
+            case 3:
+                std::cout << "Service: ";
+                std::cin >> service;
+                credentialService_->deleteCredential(service);
+                break;
+
+            case 4:
+                for (auto& c : credentialService_->listCredentials()) {
+                    std::cout << c.service << ": " << c.data.username << "\n";
+                }
+                break;
+        }
+    } while (choice != 0);
 }
