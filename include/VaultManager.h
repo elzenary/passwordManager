@@ -4,8 +4,9 @@
 #include <string>
 #include <unordered_map>
 #include "CredentialData.h"
+#include "IVaultManager.h"
 
-class VaultManager {
+class VaultManager : public IVaultManager  {
 private:
     std::string filePath_;
 
@@ -14,9 +15,8 @@ private:
 
 public:
     explicit VaultManager(const std::string& filePath);
-
-    bool save(const std::unordered_map<std::string, CredentialData>& storage);
-    std::unordered_map<std::string, CredentialData> load();
+    bool save(const std::unordered_map<std::string, CredentialData>& storage) override;
+    std::unordered_map<std::string, CredentialData> load() override;
 };
 
 #endif // VAULT_MANAGER_H

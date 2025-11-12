@@ -1,6 +1,6 @@
 #include "CredentialManager.h"
 
-CredentialManager::CredentialManager(std::shared_ptr<VaultManager> vault)
+CredentialManager::CredentialManager(std::shared_ptr<IVaultManager> vault)
     : vault_(std::move(vault)) {
     storage_ = vault_->load();
 }
