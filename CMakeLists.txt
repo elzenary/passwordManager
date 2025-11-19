@@ -14,15 +14,12 @@ src/main.cpp
 src/VaultManager.cpp
 src/CredentialManager.cpp
 src/CLI.cpp
+src/SecurityManager.cpp
 )
 
 
 set(HEADERS
-include/CredentialData.h
-include/ICredentialService.h
-include/VaultManager.h
-include/CredentialManager.h
-include/CLI.h
+include
 )
 
 

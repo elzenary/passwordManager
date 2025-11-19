@@ -4,6 +4,7 @@
 
 class SecurityManager {
 public:
+    SecurityManager();
     explicit SecurityManager(std::vector<uint8_t> masterKey);
 
     std::vector<uint8_t> encrypt(const std::vector<uint8_t>& plaintext);
@@ -11,4 +12,6 @@ public:
 
 private:
     std::vector<uint8_t> m_masterKey;
+    std::vector<uint8_t> currentSessionKey_;
+    
 };
