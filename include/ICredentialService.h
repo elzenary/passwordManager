@@ -3,8 +3,8 @@
 
 #include <string>
 #include <vector>
+#include <cstdint>
 #include <optional>
-
 #include "CredentialData.h"
 
 class ICredentialService {
@@ -15,6 +15,8 @@ public:
     virtual std::optional<CredentialData> getCredential(const std::string& service) const = 0;
     virtual bool deleteCredential(const std::string& service) = 0;
     virtual std::vector<ServiceCredential> listCredentials() const = 0;
+    virtual bool activate(const std::vector<uint8_t>& masterKey) = 0;
+    virtual void deactivate() = 0;
 };
 
 #endif // I_CREDENTIAL_SERVICE_H

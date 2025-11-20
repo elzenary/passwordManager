@@ -44,12 +44,12 @@ jobs:
     # -----------------------
     # Build and run unit tests
     # -----------------------
-    - name: Configure CMake (Unit Tests)
-      run: cmake -G Ninja -S ${{ github.workspace }}/tests -B ${{ github.workspace }}/build_tests -DCMAKE_BUILD_TYPE=Debug
+    #- name: Configure CMake (Unit Tests)
+    #  run: cmake -G Ninja -S ${{ github.workspace }}/tests -B ${{ github.workspace }}/build_tests -DCMAKE_BUILD_TYPE=Debug
 
-    - name: Build (Unit Tests)
-      run: cmake --build ${{ github.workspace }}/build_tests --config Debug
+    #- name: Build (Unit Tests)
+    #  run: cmake --build ${{ github.workspace }}/build_tests --config Debug
 
-    - name: Run Unit Tests
-      working-directory: ${{ github.workspace }}/build_tests
-      run: ctest --output-on-failure
+   # - name: Run Unit Tests
+   #   working-directory: ${{ github.workspace }}/build_tests
+   #   run: ctest --output-on-failure

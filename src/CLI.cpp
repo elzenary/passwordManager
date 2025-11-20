@@ -5,6 +5,24 @@ CLI::CLI(std::shared_ptr<ICredentialService> service)
     : credentialService_(std::move(service)) {}
 
 void CLI::run() {
+
+    // --- 1. Ask for master password ---
+    std::cout << "Enter master password: ";
+    std::string masterInput;
+    std::cin >> masterInput;
+
+    // Convert master password into bytes
+    std::vector<uint8_t> masterKey(masterInput.begin(), masterInput.end());
+
+    // --- 2. Activate credential manager ---
+    if (!credentialService_->activate(masterKey)) {
+        std::cout << "Error: Failed to activate vault. Wrong master key.\n";
+        return;  // Stop CLI
+    }
+
+    std::cout << "Vault activated successfully.\n";
+
+    // --- 3. CLI Menu ---
     int choice;
     std::string service, username, password;
 
