@@ -4,7 +4,7 @@
 CredentialManager::CredentialManager(
 std::shared_ptr<IVaultManager> vault,
 std::shared_ptr<SecurityManager> securityManager)
-: vault_(std::move(vault)), securityManager_(std::move(securityManager)) {}
+: vault_(std::move(vault)), securityManager_(std::move(securityManager)), activate_{false} {}
 
 
 bool CredentialManager::addCredential(const std::string& service, const CredentialData& data) {
@@ -49,6 +49,7 @@ std::vector<ServiceCredential> CredentialManager::listCredentials() const {
 
 bool CredentialManager::activate(const std::vector<uint8_t>& masterKey)
 {
+    securityManager_->setMasterKey(masterKey);
     activate_ = true;
     return loadVault();
 }

@@ -53,3 +53,13 @@ std::vector<uint8_t> SecurityManager::decrypt(const std::vector<uint8_t>& cipher
 
     return plaintext;
 }
+
+
+void SecurityManager::setMasterKey(const std::vector<uint8_t>& key)
+{
+    if (key.empty()) {
+        throw std::runtime_error("SecurityManager: master key must not be empty");
+    }
+
+    m_masterKey = key;
+}
