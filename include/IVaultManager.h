@@ -2,7 +2,9 @@
 #define I_VAULT_MANAGER_H
 
 #include <unordered_map>
+#include <cstdint>
 #include "CredentialData.h"
+#include <vector>
 
 class IVaultManager {
 public:
@@ -14,7 +16,7 @@ public:
     virtual std::unordered_map<std::string, CredentialData> deserialize(
         const std::vector<uint8_t>& plainBytes) = 0;
 
-    virtual bool save(const std::vector<uint8_t>& encryptedPayload) = 0;
+    virtual bool save(const std::vector<uint8_t> &encryptedPayload) = 0;
     virtual const std::vector<uint8_t>  load() = 0;
 
 };

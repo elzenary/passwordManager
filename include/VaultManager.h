@@ -2,6 +2,7 @@
 #define VAULT_MANAGER_H
 
 #include <string>
+#include <cstdint>
 #include <unordered_map>
 #include "CredentialData.h"
 #include "IVaultManager.h"
@@ -17,7 +18,7 @@ public:
         const std::unordered_map<std::string, CredentialData>& credentials) override;
 
      std::unordered_map<std::string, CredentialData> deserialize(
-        const std::vector<uint8_t>& plainBytes) override;
+        const std::vector<uint8_t> &plainBytes) override;
 
      const std::vector<uint8_t>  load() override;
      bool save(const std::vector<uint8_t>& encryptedPayload) override;

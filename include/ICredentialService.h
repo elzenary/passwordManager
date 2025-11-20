@@ -3,8 +3,8 @@
 
 #include <string>
 #include <vector>
+#include <cstdint>
 #include <optional>
-
 #include "CredentialData.h"
 
 class ICredentialService {

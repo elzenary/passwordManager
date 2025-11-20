@@ -1,49 +1,66 @@
+// VaultManager.cpp
 #include "VaultManager.h"
 #include <fstream>
+#include <string>
 #include <sstream>
-#include <iostream>
+#include <vector>
+#include <unordered_map>
 
+// Constructor: store file path
 VaultManager::VaultManager(const std::string& filePath)
     : filePath_(filePath) {}
 
-bool VaultManager::save(const std::unordered_map<std::string, CredentialData>& storage) {
-    std::ofstream file(filePath_);
-    if (!file.is_open()) return false;
+// Simple serialization: each element on a new line: service, username, password
+std::vector<uint8_t> VaultManager::serialize(
+    const std::unordered_map<std::string, CredentialData>& credentials)
+{
+    std::vector<uint8_t> out;
 
-    for (const auto& [service, data] : storage) {
-        file << encrypt(service) << "," 
-             << encrypt(data.username) << "," 
-             << encrypt(data.password) << "\n";
+    for (const auto& [service, data] : credentials) {
+        std::string line = service + "\n" + data.username + "\n" + data.password + "\n";
+        out.insert(out.end(), line.begin(), line.end());
     }
-    return true;
+
+    return out;
 }
 
-std::unordered_map<std::string, CredentialData> VaultManager::load() {
+// Simple deserialization: read 3 lines per entry: service, username, password
+std::unordered_map<std::string, CredentialData> VaultManager::deserialize(
+    const std::vector<uint8_t> &plainBytes)
+{
     std::unordered_map<std::string, CredentialData> storage;
-    std::ifstream file(filePath_);
-    if (!file.is_open()) return storage;
+    std::string content(plainBytes.begin(), plainBytes.end());
+    std::istringstream iss(content);
+    std::string service, username, password;
 
-    std::string line;
-    while (std::getline(file, line)) {
-        std::istringstream ss(line);
-        std::string service, user, pass;
-        if (std::getline(ss, service, ',') &&
-            std::getline(ss, user, ',') &&
-            std::getline(ss, pass)) {
-            storage[decrypt(service)] = {decrypt(user), decrypt(pass)};
-        }
+    while (std::getline(iss, service) && std::getline(iss, username) && std::getline(iss, password)) {
+        storage[service] = {username, password};
     }
+
     return storage;
 }
 
-std::string VaultManager::encrypt(const std::string& input) const {
-    std::string output = input;
-    for (char& c : output) c += 1; // simple shift encryption
-    return output;
+// Load file content as bytes
+const std::vector<uint8_t> VaultManager::load()
+{
+    std::ifstream file(filePath_);
+    if (!file.is_open()) return {};
+
+    std::string line, content;
+    while (std::getline(file, line)) {
+        content += line + "\n";
+    }
+
+    return std::vector<uint8_t>(content.begin(), content.end());
 }
 
-std::string VaultManager::decrypt(const std::string& input) const {
-    std::string output = input;
-    for (char& c : output) c -= 1;
-    return output;
+// Save bytes to file
+bool VaultManager::save(const std::vector<uint8_t> &encryptedPayload)
+{
+    std::ofstream file(filePath_);
+    if (!file.is_open()) return false;
+
+    std::string str(encryptedPayload.begin(), encryptedPayload.end());
+    file << str;
+    return true;
 }
