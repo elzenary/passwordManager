@@ -1,4 +1,4 @@
-#include "securityManager.h"
+#include "SecurityManager.h"
 #include <stdexcept>
 #include <algorithm>    // for std::transform
 
