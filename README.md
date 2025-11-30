@@ -1,12 +1,12 @@
 # Password Manager
 
-A secure, cross-platform **command-line interface (CLI)** utility for efficiently managing and securely storing your sensitive login credentials. Built with modern C++.
+A secure, cross-platform **command-line interface (CLI)** utility for efficiently managing and securely storing your sensitive login credentials. Built with modern C++ and and **libsodium** for cryptography operations.
 
 ---
 
 ## Features
 
-* **Strong Encryption:** All stored credentials are encrypted using **[TBD]** before being written to disk.
+* **Strong Encryption:** All stored credentials are encrypted using **libsodium** before being written to disk.
 * **Command Line Interface (CLI):** Simple, fast, and lightweight interaction directly from your terminal.
 * **Cross-Platform:** Easily buildable on Windows, macOS, and Linux using the **CMake** build system.
 
@@ -20,7 +20,7 @@ To build and run this project, you need the following dependencies installed on 
 | :---                 | :---           | :--- |
 | **C++ Compiler**     | C++17 or later | GCC, Clang, or MSVC is required. |
 | **CMake**            | 3.10 or later  | Used to generate the build files. |
-| **[Ext Crypto Lib]** | [TBD]          | Specific library like OpenSSL or libsodium for crypto. |
+| **libsodium**        | 1.0.20+        | Required for encryption, decryption, and hashing. <br> *Linux:* `sudo apt install libsodium-dev` <br> *Windows:* Prebuilt libraries included in `thirdparty/libsodium` |
 
 ---
 ## BUILDING
